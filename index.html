@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    
+    <title>COVID-19 Dashboard</title>
+  </head>
+  <body>
+    <div class="background">
+      <div class="background__image"></div>
+      <div class="switch-background-btn-container">
+        <p class="flip-switch-on">ON</p>
+        <div class="switch-background-btn flip-switch-on"></div>
+      </div>
+      <header>
+        <div class="title-container">
+          <h1>COVID-19 Dashboard</h1>
+        </div>
+        <div class="search-bar-container">
+          <div class="search-bar__logo-container">
+            <img
+              src="./img/virus.png"
+              alt="Virus icon"
+              width="30"
+              height="30"
+            />
+          </div>
+          <div class="search-bar__input-container autocomplete">
+            <input
+              autocomplete="off"
+              type="text"
+              placeholder="Type a country name..."
+              id="search-bar__input__countryToSearch"
+            />
+          </div>
+          <div class="search-bar__btn-container">
+            <button type="submit" class="search-bar__btn">Add country</button>
+          </div>
+        </div>
+      </header>
+      <div class="spinner-container">
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+          <p class="spinner-legend"></p>
+        </div>
+      </div>
+      <section class="countries-container"></section>
+      <button class="add-current-country-btn">Add my current country</button>
+      <button class="reset-btn hidden">Reset</button>
+      <div class="calculations-information">
+        <div class="calculations-information__0 hidden">
+          <p>
+            (confirmed infections / population - reference confirmed infections
+            / reference population) * 100
+          </p>
+        </div>
+        <div class="calculations-information__1 hidden">
+          <p>
+            (recovered / confirmed - reference recovered / reference confirmed)
+            * 100
+          </p>
+        </div>
+        <div class="calculations-information__2 hidden">
+          <p>
+            (deaths / confirmed - reference deaths / reference confirmed) * 100
+          </p>
+        </div>
+        <div class="calculations-information__3 hidden">
+          <p>
+            (administered vaccines / population - reference administered
+            vaccines / reference population) * 100
+          </p>
+        </div>
+      </div>
+    </div>
+    <script defer src="./index.js"></script>
+  </body>
+</html>

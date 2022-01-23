@@ -1,0 +1,812 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700;900&display=swap');
+
+/* SECTION Initial reset */
+
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  /*outline: 1px dashed blue; /* Debugging purposes */
+}
+
+/* SECTION Custom properties (variables) */
+
+:root {
+  --color-light-green: #2a9d8f;
+  --color-dark-green: #264653;
+  --color-background: #96a5ac;
+  --color-message-success: #4f8a10;
+  --color-message-success-background: #dff2bf;
+  --color-message-error: #8a1010;
+  --color-message-error-background: #f2bfbf;
+  --color-white: #fff;
+
+  --transparency-white: rgba(255, 255, 255, 0.5);
+
+  --shadow-message-box: 0px 5px 20px 3px rgba(0, 0, 0, 0.3);
+  --shadow-white-transparent: 0 0 0 10px rgba(255, 255, 255, 0.5);
+
+  --font: 'Montserrat', sans-serif;
+}
+
+/* SECTION Background */
+
+.background {
+  width: 100%;
+  min-height: 100%;
+  position: absolute;
+  background-color: var(--color-background);
+  z-index: -20;
+}
+/*  NOTE: Adding a 'filter: blur()' to the image added an ugly white border on it, so I found an alternative using 'backdrop-filter', although it's not fully supported.
+    https://stackoverflow.com/questions/28870932/how-to-remove-white-border-from-blur-background-image (I added extra support check).
+    UPDATE: Unfortunately, Chrome displays an annoying flicker effect on the blurred image, so I'll not implement the 'backdrop-filter: blur()' property.
+
+@supports (backdrop-filter: blur(0.5rem)) {
+    .background__image::after {
+        backdrop-filter: blur(
+            0.5rem
+        );
+    }
+}
+@supports not (backdrop-filter: blur(0.5rem)) {
+    .background__image {
+        filter: blur(0.5rem);
+        outline: 0.5rem solid var(--color-dark-green);
+    }
+}
+*/
+.background__image::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+  pointer-events: none; /* make the overlay click-through */
+}
+.background__image {
+  position: absolute;
+  background: url('../img/fusion-medical-animation-npjP0dCtoxo-unsplash.jpg')
+    center no-repeat;
+  background-size: cover;
+  filter: blur(0.5rem);
+  outline: 0.5rem solid var(--color-dark-green); /* Hide the white border due to blur */
+  z-index: -10;
+  width: 100%;
+  min-height: 100%;
+}
+.switch-background-btn-container {
+  left: 90%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  cursor: pointer;
+  width: 1.875rem;
+  height: 3.125rem;
+  background-color: var(--color-white);
+  border-radius: 0 0 20px 20px;
+  box-shadow: var(--shadow-white-transparent);
+  color: var(--color-light-green);
+  font-size: 0.7rem;
+}
+.switch-background-btn {
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--color-light-green);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.switch-background-btn:hover {
+  background-color: var(--color-dark-green);
+}
+
+/* SECTION Title */
+
+.title-container {
+  padding: 1rem 0;
+  text-align: center;
+  color: var(--transparency-white);
+}
+
+.title-container h1 {
+  font-size: 1.97rem;
+  font-weight: 700;
+}
+
+/* SECTION Search bar */
+
+.search-bar-container {
+  width: 21rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  margin: 0 auto;
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-white-transparent);
+}
+.search-bar__logo-container {
+  margin: 0.4375rem 0.3125rem 0.1875rem 0.3125rem;
+  filter: invert(48%) sepia(65%) saturate(410%) hue-rotate(123deg)
+    brightness(95%) contrast(95%);
+}
+.search-bar__btn-container {
+  width: 12.5rem;
+}
+.search-bar__btn,
+.search-bar__btn:active {
+  background-color: var(--color-light-green);
+  width: 100%;
+  height: 2.5rem;
+  border-radius: 1.25rem;
+  border: 0;
+  color: var(--color-white);
+  font-family: var(--font);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+/* .search-bar__btn:focus, */
+.search-bar__btn:hover,
+.search-bar__btn:focus {
+  background-color: var(--color-dark-green);
+  cursor: pointer;
+}
+.search-bar__input-container {
+  width: 100%;
+}
+
+#search-bar__input__countryToSearch {
+  width: 100%;
+  height: 2.5rem;
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--color-light-green);
+  border: 0;
+  padding-left: 0.2rem;
+}
+#search-bar__input__countryToSearch:focus {
+  outline: none; /* NOTE This might be bad for screen readers */
+}
+#search-bar__input__countryToSearch:disabled {
+  background-color: var(--color-white);
+  color: var(--color-message-error);
+}
+
+/* SECTION Country cards */
+
+.countries-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* For mobile */
+  margin-top: 7rem;
+}
+.close-card-btn,
+.close-card-btn:active {
+  margin: -0.75rem -19.5rem 0 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--color-white);
+  box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.close-card-btn img {
+  display: block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: 0.35rem auto;
+  filter: invert(48%) sepia(65%) saturate(410%) hue-rotate(123deg)
+    brightness(95%) contrast(95%);
+}
+.close-card-btn:hover,
+.close-card-btn:focus {
+  transform: scale(1.5, 1.5);
+  box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.3);
+}
+.full-country-data-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 2rem;
+  animation: fadeIn 1s;
+  -webkit-animation: fadeIn 1s;
+  -moz-animation: fadeIn 1s;
+  -o-animation: fadeIn 1s;
+  -ms-animation: fadeIn 1s;
+}
+.country-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 19.5rem;
+  /* margin-top: 1rem; */
+  background-color: var(--color-white);
+  border-radius: 5px;
+  box-shadow: var(--shadow-message-box);
+  padding-bottom: 1rem;
+  position: relative;
+  z-index: 10;
+}
+.country__flag-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 17.5rem;
+  height: 8.75rem;
+  background-color: gray;
+  border-radius: 5px;
+  margin-top: 0.35rem;
+  /* background-size: 100% 8.75rem; */
+  background-size: cover;
+  background-position: center;
+}
+.country__flag__title__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  height: 2rem;
+  background-color: rgba(42, 157, 143, 0.7);
+  border-radius: 0 0 5px 5px;
+}
+.country__flag__title {
+  text-align: center;
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+.country__infections-container,
+.country__vaccinations-container {
+  display: flex;
+  flex-direction: column;
+  width: 17.5rem;
+}
+.country__infections__title,
+.country__vaccinations__title {
+  display: block;
+  width: 100%;
+  height: 2rem;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  color: var(--color-white);
+}
+.country__infections__title {
+  background-color: #e76f51;
+}
+.country__vaccinations__title {
+  background-color: var(--color-light-green);
+}
+.country__infections__title h3,
+.country__vaccinations__title h3 {
+  font-weight: 100;
+  font-size: 1.2rem;
+  text-align: center;
+  position: relative;
+  top: 15%;
+}
+.countries-container ul {
+  list-style-type: none;
+}
+.country__infections__list__item,
+.country__vaccinations__list__item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 2rem;
+  margin-top: 0.3rem;
+  border-radius: 5px;
+}
+.country__infections__list__item {
+  background-color: rgba(231, 111, 81, 0.1);
+}
+.country__infections__list__item:hover {
+  background-color: rgba(231, 111, 81, 0.25);
+}
+.country__vaccinations__list__item {
+  background-color: rgba(42, 157, 143, 0.1);
+}
+.country__vaccinations__list__item:hover {
+  background-color: rgba(42, 157, 143, 0.25);
+}
+.country__vaccinations__list__item__reference,
+.country__comparison__list__item__reference {
+  color: var(--color-light-green);
+  font-size: 1rem;
+  margin: auto 0 auto 1rem;
+}
+.country__vaccinations__list__item__value,
+.country__comparison__list__item__value {
+  color: var(--color-light-green);
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin: auto 1rem auto 0;
+}
+.country__comparison__list-container {
+  display: flex;
+  flex-direction: column;
+  width: 17.5rem;
+  filter: drop-shadow(0px 5px 3px rgba(0, 0, 0, 0.4));
+  position: relative;
+  z-index: 5;
+  animation: slideIn 1s;
+  -webkit-animation: slideIn 1s;
+  -moz-animation: slideIn 1s;
+  -o-animation: slideIn 1s;
+  -ms-animation: slideIn 1s;
+}
+.country__comparison__title {
+  width: 100%;
+  height: 2rem;
+  background-color: var(--color-light-green);
+  color: var(--color-dark-green);
+}
+.reference-country {
+  border-radius: 0 0 5px 5px;
+  margin-bottom: 4rem;
+}
+.country__comparison__title h3 {
+  font-weight: normal;
+  font-size: 1rem;
+  font-weight: 100;
+  color: var(--color-white);
+  text-align: center;
+  position: relative;
+  top: 20%;
+}
+.country__comparison__list__item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 2rem;
+  background-color: var(--color-dark-green);
+  color: var(--color-light-green);
+  border-bottom: 1px dashed var(--color-light-green);
+}
+.country__comparison__list__item:last-of-type {
+  border-bottom: none;
+  border-radius: 0 0 5px 5px;
+  margin-bottom: 4rem;
+}
+.country__comparison__list__item:hover {
+  background-color: #1c353f;
+}
+
+/* SECTION Spinners */
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+}
+.spinner {
+  position: absolute;
+  max-width: 90%; /* For mobile */
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  color: var(--color-white);
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.spinner p {
+  margin-left: 1rem;
+}
+.spinner div {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.2rem;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  animation: sk-bouncedelay 1.4s infinite;
+}
+.spinner .bounce1 {
+  animation-delay: -0.32s;
+}
+.spinner .bounce2 {
+  animation-delay: -0.16s;
+}
+.green-check {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  margin: 2rem 0 0 -1.5rem;
+  font-size: 1rem;
+  background-color: var(--color-message-success-background);
+  border-radius: 5px;
+  color: var(--color-message-success);
+  box-shadow: var(--shadow-message-box);
+  animation: fadeInAndOut 3s; /* Must be in sync with successCheck JavaScript function */
+}
+.green-check img {
+  display: block;
+  position: relative;
+  top: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  margin: auto;
+  filter: invert(39%) sepia(49%) saturate(4849%) hue-rotate(64deg)
+    brightness(99%) contrast(87%);
+}
+
+/* SECTION Reset and Add country button */
+
+.reset-btn,
+.add-current-country-btn {
+  display: block; /* By default, it's an inline element */
+  width: 13rem;
+  height: 2.5rem;
+  background-color: var(--color-white);
+  margin: 1rem auto 15rem auto;
+  border-radius: 20px;
+  border: none;
+  box-shadow: var(--shadow-white-transparent);
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--color-light-green);
+  transition: all 0.2s;
+}
+.reset-btn:hover,
+.reset-btn:focus,
+.add-current-country-btn:hover,
+.add-current-country-btn:focus {
+  background-color: var(--color-dark-green);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+/* SECTION Messages */
+
+.message-success-container,
+.message-error-container {
+  display: flex;
+  justify-content: center;
+}
+.message-success,
+.message-error {
+  position: absolute;
+  max-width: 90%; /* For mobile */
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  margin-bottom: 2rem; /* Keep margins separated */
+  padding: 1rem;
+  width: fit-content;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  box-shadow: var(--shadow-message-box);
+  animation: fadeIn 1s;
+  -webkit-animation: fadeIn 1s;
+  -moz-animation: fadeIn 1s;
+  -o-animation: fadeIn 1s;
+  -ms-animation: fadeIn 1s;
+}
+.message-success {
+  background-color: var(--color-message-success-background);
+  color: var(--color-message-success);
+}
+.message-error {
+  background-color: var(--color-message-error-background);
+  color: var(--color-message-error);
+}
+.close-message-btn {
+  margin: -0.8rem -0.8rem 0 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.close-message-btn img {
+  display: block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: 0.35rem auto;
+}
+.close-message-btn:hover,
+.close-message-btn:focus {
+  transform: scale(1.5, 1.5);
+}
+#success-message-close-btn {
+  filter: invert(64%) sepia(69%) saturate(6681%) hue-rotate(61deg)
+    brightness(91%) contrast(87%);
+}
+#error-message-close-btn {
+  filter: invert(16%) sepia(43%) saturate(5207%) hue-rotate(351deg)
+    brightness(78%) contrast(97%);
+}
+
+/* SECTION Hidden elements */
+
+.hidden {
+  /* opacity: 0; */
+  display: none;
+}
+
+/* SECTION Animations */
+
+/* Spinners */
+@keyframes sk-bouncedelay {
+  0% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+/* fadeIn */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* fadeInAndOut */
+@keyframes fadeInAndOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes fadeInAndOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeInAndOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-o-keyframes fadeInAndOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-ms-keyframes fadeInAndOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* slideIn */
+@keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@-moz-keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@-o-keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@-ms-keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* SECTION Autocomplete countries (adapted from https://www.w3schools.com/howto/howto_js_autocomplete.asp) */
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+.autocomplete-items {
+  position: absolute;
+  z-index: 100;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  font-family: var(--font);
+  font-weight: 100;
+}
+.autocomplete-items div {
+  padding: 0.4rem;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: var(--color-white);
+}
+
+/* SECTION Footer */
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.8rem;
+  color: var(--color-dark-green);
+  background-color: var(--transparency-white);
+}
+footer a {
+  color: var(--color-light-green);
+}
+footer a:hover {
+  text-decoration: underline dashed;
+  color: var(--color-dark-green);
+}
+footer img {
+  filter: invert(51%) sepia(58%) saturate(463%) hue-rotate(123deg)
+    brightness(89%) contrast(92%);
+  margin: 0.5rem 0 1rem 0;
+  transition: all 0.2s;
+}
+footer img:hover {
+  transform: translateY(-0.2rem);
+  filter: invert(51%) sepia(58%) saturate(463%) hue-rotate(123deg)
+    brightness(89%) contrast(92%) drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* SECTION Calculations information */
+
+[class^='calculations-information__']:not(.calculations-information__info-icon) {
+  width: 14rem;
+  height: 4rem;
+  font-size: 0.7rem;
+  text-align: center;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-message-box);
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 150;
+}
+
+.calculations-information__info-icon {
+  width: 1rem;
+  filter: invert(48%) sepia(65%) saturate(410%) hue-rotate(123deg)
+    brightness(95%) contrast(95%);
+  margin-left: 0.5rem;
+}
+
+/* SECTION Mobile first */
+
+@media (min-width: 800px) {
+  .title-container {
+    margin-top: -3.125rem;
+    padding: 1rem 0;
+  }
+
+  .title-container h1 {
+    font-weight: 900;
+    font-size: 3.4rem;
+  }
+
+  .search-bar-container {
+    width: 37.5rem;
+  }
+
+  #search-bar__input__countryToSearch {
+    font-size: 1.2rem;
+  }
+
+  .message-success,
+  .message-error {
+    margin-bottom: 0; /* Keep margins separated */
+  }
+}
